@@ -3,11 +3,31 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
 import initialData from './initial-data';
 
-// // result structure
-// const result = {
+// // onDragStart
+// const start = {
 //   draggableId: 'task-1',
 //   type: 'TYPE',
-//   reason: 'DROP',
+//   source: {
+//     droppableId: 'column-1',
+//     index: 0,
+//   },
+// };
+
+// // onDragUpdate
+// const update = {
+//   ...start,
+//   destination: {
+//     droppableId: 'column-1',
+//     index: 1,
+//   },
+// };
+
+// // onDragEnd
+// const result = {
+//   ...update,
+//   draggableId: 'task-1',
+//   type: 'TYPE',
+//   reason: 'DROP', ***
 //   source: {
 //     droppableId: 'column-1',
 //     index: 0,
@@ -21,7 +41,24 @@ import initialData from './initial-data';
 
 export const App = () => {
   const [data, setData] = useState(initialData);
+
+  const onDragStart = () => {
+    document.body.style.color = 'orange';
+    document.body.style.transition = 'background-color 0.2s ease';
+  }
+
+  const onDragUpdate = update => {
+    const { destination } = update;
+    const opacity = destination
+      ? destination.index / Object.keys(data.tasks).length
+      : 0;
+    document.body.style.backgroundColor = `rgba( 153, 141, 217, ${opacity})`;
+  };
+
   const onDragEnd = (result) => {
+    document.body.style.color = 'inherit';
+    document.body.style.backgroundColor = 'inherit';
+
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
@@ -44,7 +81,7 @@ export const App = () => {
     setData(newState);
   };
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
       {data.columnOrder.map((columnId) => {
         const column = data.columns[columnId];
         const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
