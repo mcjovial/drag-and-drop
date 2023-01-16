@@ -21,10 +21,7 @@ const Column = ({ column, tasks }) => {
       <Title>{column.title}</Title>
       <Droppable droppableId={column.id}>
         {(provided) => (
-          <TaskList
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+          <TaskList ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
               <Task key={task.id} task={task} index={index} />
             ))}

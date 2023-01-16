@@ -18,10 +18,12 @@ const Task = ({ task, index }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-        >{task.content}</Container>
+        >
+          {task.content}
+        </Container>
       )}
     </Draggable>
-  )
+  );
 };
 
 export default Task;
