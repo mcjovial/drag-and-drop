@@ -47,9 +47,14 @@ const Container = styled.div`
 export const App = () => {
   const [data, setData] = useState(initialData);
 
-  const onDragStart = () => {
+  const onDragStart = (start) => {
     document.body.style.color = 'orange';
     document.body.style.transition = 'background-color 0.2s ease';
+
+    const homeIndex = data.columnOrder.indexOf(start.source.droppableId);
+
+    setData({...data, homeIndex})
+
   };
 
   const onDragUpdate = (update) => {
@@ -61,6 +66,8 @@ export const App = () => {
   };
 
   const onDragEnd = (result) => {
+    setData({...data, homeIndex: null})
+
     document.body.style.color = 'inherit';
     document.body.style.backgroundColor = 'inherit';
 
@@ -123,10 +130,12 @@ export const App = () => {
       onDragEnd={onDragEnd}
     >
       <Container>
-        {data.columnOrder.map((columnId) => {
+        {data.columnOrder.map((columnId, index) => {
           const column = data.columns[columnId];
           const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
-          return <Column key={column.id} column={column} tasks={tasks} />;
+          const isDropDisabled = index < data.homeIndex;  //to prevent dragging backwards between the columns
+
+          return <Column key={column.id} column={column} tasks={tasks} isDropDisabled={isDropDisabled} />;
         })}
       </Container>
     </DragDropContext>
