@@ -26,7 +26,7 @@ const Title = styled.h3`
 const TaskList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.isDraggingOver ? 'lightgrey' : 'inherit'};
   flex-grow: 1;
   min-height: 100px;
@@ -35,15 +35,20 @@ const TaskList = styled.div`
 const Column = ({ column, tasks, isDropDisabled, index }) => {
   return (
     <Draggable draggableId={column.id} index={index}>
-      {(provided)=>(
-        <Container
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-        >
+      {(provided) => (
+        <Container {...provided.draggableProps} ref={provided.innerRef}>
           <Title {...provided.dragHandleProps}>{column.title}</Title>
-          <Droppable droppableId={column.id} isDropDisabled={isDropDisabled} type='task'>
+          <Droppable
+            droppableId={column.id}
+            isDropDisabled={isDropDisabled}
+            type="task"
+          >
             {(provided, snapshot) => (
-              <TaskList ref={provided.innerRef} {...provided.droppableProps} isDraggingOver={snapshot.isDraggingOver}>
+              <TaskList
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
                 {tasks.map((task, index) => (
                   <Task key={task.id} task={task} index={index} />
                 ))}

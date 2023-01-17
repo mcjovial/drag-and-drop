@@ -47,7 +47,11 @@ const Container = styled.div`
 export const App = () => {
   const [data, setData] = useState(initialData);
 
-  const onDragStart = (start) => {
+  const onDragStart = (start, provided) => {
+    provided.announce(
+      `You have lifted the task in position ${start.source.index + 1}`
+    );
+
     document.body.style.color = 'orange';
     document.body.style.transition = 'background-color 0.2s ease';
 
@@ -56,7 +60,13 @@ export const App = () => {
     setData({ ...data, homeIndex });
   };
 
-  const onDragUpdate = (update) => {
+  const onDragUpdate = (update, provided) => {
+    const message = update.destination
+      ? `You have moved the task to position ${update.destination.index + 1}`
+      : `You are currently not over a droppable area`;
+
+    provided.announce(message);
+
     const { destination } = update;
     const opacity = destination
       ? destination.index / Object.keys(data.tasks).length
@@ -64,8 +74,15 @@ export const App = () => {
     document.body.style.backgroundColor = `rgba( 153, 141, 217, ${opacity})`;
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result, provided) => {
     setData({ ...data, homeIndex: null });
+    const message = result.destination
+      ? `You have moved the task from position
+      ${result.source.index + 1} to ${result.destination.index + 1}`
+      : `The task has been returned to its starting position of
+      ${result.source.index + 1}`;
+
+    provided.announce(message);
 
     document.body.style.color = 'inherit';
     document.body.style.backgroundColor = 'inherit';
